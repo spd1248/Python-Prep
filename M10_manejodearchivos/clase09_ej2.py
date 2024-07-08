@@ -1,22 +1,25 @@
+import csv
+import datetime
 import sys
-# Comprobación de seguridad, ejecutar sólo si se recibe 3 argumentos
-if len(sys.argv) == 2:
-    import datetime
-    import os
-    marca_de_tiempo = datetime.datetime.now()
-    marca_de_tiempo = int(datetime.datetime.timestamp(marca_de_tiempo))
 
-    #temperatura = sys.argv[1]
-    #humedad = sys.argv[2]
-    lluvia = sys.argv[1]
-    temperatura = input('Ingrese la temperatura en grados centígrados')
-    humedad = input('Ingrese el porcentaje de humedad')
-    linea = str(marca_de_tiempo) + ',' + temperatura + ',' + humedad + ',' + lluvia
 
-    logs_lluvia = open('clase09_ej2.csv', 'a')
-    logs_lluvia.write(linea+'\n')
-    logs_lluvia.close()
+def registrar_datos(temperatura, humedad, llovio):
+    archivo = 'clase09_ej2.csv'
+    tiempo_actual = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-else:
-    print("ERROR: Introdujo una cantidad de argumentos distinta de tres (3)")
-    print('Ejemplo: clase09_ej1.py <temperatura> <humedad> <True o False>')
+    with open(archivo, mode='a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow([tiempo_actual, temperatura, humedad, llovio])
+
+
+if __name__ == "__main__":
+    if len(sys.argv) != 4:
+        print("Uso: python clase09_ej2.py2 <temperatura> <humedad> <llovio>")
+        sys.exit(1)
+
+    temperatura = float(sys.argv[1])
+    humedad = float(sys.argv[2])
+    llovio = sys.argv[3].lower() in ['true', '1', 't', 'y', 'yes']
+
+    registrar_datos(temperatura, humedad, llovio)
+    print("Datos registrados correctamente.")
